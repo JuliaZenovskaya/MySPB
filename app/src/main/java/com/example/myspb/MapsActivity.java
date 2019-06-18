@@ -46,6 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
         dbHelper = new DBHelper(this);
     }
@@ -61,20 +62,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            LatLng temp = null;
             @Override
             public void onMarkerDragStart(Marker marker) {
-                temp=marker.getPosition();
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                marker.setPosition(temp);
             }
 
             @Override
             public void onMarkerDrag(Marker marker) {
-                marker.setPosition(temp);
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent startLookIntent = new Intent(MapsActivity.this, LookNote.class);
+                startLookIntent.putExtra(LookNote.LAT, Double.toString(marker.getPosition().latitude));
+                startLookIntent.putExtra(LookNote.LNG, Double.toString(marker.getPosition().longitude));
+                startActivity(startLookIntent);
+                return false;
             }
         });
 
@@ -121,17 +129,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Marker mar = mMap.addMarker(new MarkerOptions().position(newlatlng).draggable(false));
             } while (cursor.moveToNext());
-
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent startLookIntent = new Intent(MapsActivity.this, LookNote.class);
-                    startLookIntent.putExtra(LookNote.LAT, Double.toString(marker.getPosition().latitude));
-                    startLookIntent.putExtra(LookNote.LNG, Double.toString(marker.getPosition().longitude));
-                    startActivity(startLookIntent);
-                    return false;
-                }
-            });
 
         }
         cursor.close();

@@ -1,5 +1,6 @@
 package com.example.myspb;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,10 +50,21 @@ public class EditNote extends AppCompatActivity {
     }
 
     public void onClickSave(View view) {
+        updateNote();
+        Intent startMapIntent = new Intent(EditNote.this, MapsActivity.class);
+        startActivity(startMapIntent);
     }
 
     public void onClickExit(View view) {
         Intent startMapIntent = new Intent(EditNote.this, MapsActivity.class);
         startActivity(startMapIntent);
+    }
+
+    public void updateNote(){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("note", text.getText().toString());
+        String[] forID = new String[] {Integer.toString(currentID)};
+        db.update("myNotes", cv, "id = ?", forID);
     }
 }

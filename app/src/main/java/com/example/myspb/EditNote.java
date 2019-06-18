@@ -36,17 +36,16 @@ public class EditNote extends AppCompatActivity {
     }
 
     public void showPreviousText(){
-        //SQLiteDatabase db = dbHelper.getWritableDatabase();
-        //String sql = "SELECT * FROM myNotes WHERE id = " + currentID + ";";
-        //String forText = "";
-        //Cursor cursor = db.rawQuery(sql,null);
-        //if (cursor.moveToFirst()) {
-        //    int colIndex = cursor.getColumnIndex("note");
-        //    forText = cursor.getString(colIndex);
-        //}
-        //cursor.close();
-        //Toast.makeText(EditNote.this, forText, Toast.LENGTH_LONG).show();
-        //text.setText("Text");
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "SELECT * FROM myNotes WHERE id = " + currentID + ";";
+        String forText = "";
+        Cursor cursor = db.rawQuery(sql,null);
+        if (cursor.moveToFirst()) {
+            int colIndex = cursor.getColumnIndex("note");
+            forText = cursor.getString(colIndex);
+        }
+        cursor.close();
+        text.setText(forText);
     }
 
     public void onClickSave(View view) {

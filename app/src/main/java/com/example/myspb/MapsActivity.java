@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -13,15 +14,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ImageButton btnAdd;
+    private EditText searchText;
+    private boolean added = true;
     LatLng latLng;
     DBHelper dbHelper;
     Marker markerForAdd;
@@ -36,6 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
         dbHelper = new DBHelper(this);
+
+        searchText = findViewById(R.id.searchOnMap);
     }
 
     @Override
@@ -65,22 +74,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Intent startLookIntent = new Intent(MapsActivity.this, LookNote.class);
-                startLookIntent.putExtra(LookNote.LAT, Double.toString(marker.getPosition().latitude));
-                startLookIntent.putExtra(LookNote.LNG, Double.toString(marker.getPosition().longitude));
-                startActivity(startLookIntent);
+                if (added) {
+                    Intent startLookIntent = new Intent(MapsActivity.this, LookNote.class);
+                    startLookIntent.putExtra(LookNote.LAT, Double.toString(marker.getPosition().latitude));
+                    startLookIntent.putExtra(LookNote.LNG, Double.toString(marker.getPosition().longitude));
+                    startActivity(startLookIntent);
+                }
                 return true;
             }
         });
 
-        showMarkers();
+        showPlaces();
     }
 
     public void onClickSearch(View view) {
+        showPlaces();
     }
 
     public void onClickAddNewNotePartTwo(View view) {
         latLng = markerForAdd.getPosition();
+        added = true;
         Intent startAddIntent = new Intent(this, AddNewNote.class);
         startAddIntent.putExtra(AddNewNote.LATITUDE, Double.toString(latLng.latitude));
         startAddIntent.putExtra(AddNewNote.LONGITUDE, Double.toString(latLng.longitude));
@@ -88,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onClickAddNewNote(View view) {
+        added = false;
         btnAdd = view.findViewById(R.id.btnAddNewNote);
         btnAdd.setVisibility(View.INVISIBLE);
 
@@ -99,24 +113,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClickLocation(View view) {
     }
 
-    public void showMarkers(){
+    public void showPlaces(){
+        mMap.clear();
         LatLng newlatlng;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        Cursor cursor = db.query("myNotes", null, null, null, null, null, null);
-
+        String sql = "SELECT * FROM myNotes WHERE note LIKE '%" + searchText.getText().toString() + "%';";
+        Cursor cursor = db.rawQuery(sql,null);
         if (cursor.moveToFirst()){
             int latColIndex = cursor.getColumnIndex("latitude");
             int lngColIndex = cursor.getColumnIndex("longitude");
-
             do {
                 newlatlng = new LatLng(cursor.getDouble(latColIndex), cursor.getDouble(lngColIndex));
-
-                mMap.addMarker(new MarkerOptions().position(newlatlng).draggable(false));
+                mMap.addMarker(new MarkerOptions().position(newlatlng));
             } while (cursor.moveToNext());
-
         }
         cursor.close();
-
     }
 }

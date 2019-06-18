@@ -1,15 +1,8 @@
 package com.example.myspb;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.sip.SipSession;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +13,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -31,11 +22,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ImageButton btnAdd;
-    private ImageButton btnAddPartTwo;
     LatLng latLng;
-    private LatLng myLocation;
-    private int markerID;
-    private boolean m = true;
     DBHelper dbHelper;
     Marker markerForAdd;
 
@@ -82,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startLookIntent.putExtra(LookNote.LAT, Double.toString(marker.getPosition().latitude));
                 startLookIntent.putExtra(LookNote.LNG, Double.toString(marker.getPosition().longitude));
                 startActivity(startLookIntent);
-                return false;
+                return true;
             }
         });
 
@@ -94,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onClickAddNewNotePartTwo(View view) {
         latLng = markerForAdd.getPosition();
-        Intent startAddIntent = new Intent(MapsActivity.this, AddNewNote.class);
+        Intent startAddIntent = new Intent(this, AddNewNote.class);
         startAddIntent.putExtra(AddNewNote.LATITUDE, Double.toString(latLng.latitude));
         startAddIntent.putExtra(AddNewNote.LONGITUDE, Double.toString(latLng.longitude));
         startActivity(startAddIntent);
@@ -114,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void showMarkers(){
         LatLng newlatlng;
-        Marker newMarker;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         Cursor cursor = db.query("myNotes", null, null, null, null, null, null);
@@ -122,12 +108,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (cursor.moveToFirst()){
             int latColIndex = cursor.getColumnIndex("latitude");
             int lngColIndex = cursor.getColumnIndex("longitude");
-            int noteColIndex = cursor.getColumnIndex("note");
 
             do {
                 newlatlng = new LatLng(cursor.getDouble(latColIndex), cursor.getDouble(lngColIndex));
 
-                Marker mar = mMap.addMarker(new MarkerOptions().position(newlatlng).draggable(false));
+                mMap.addMarker(new MarkerOptions().position(newlatlng).draggable(false));
             } while (cursor.moveToNext());
 
         }

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -40,14 +41,19 @@ public class LookNote extends AppCompatActivity {
 
     public void searchText(){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query("myNotes", null, null, null, null, "latitude = " + latitude + ", longitude = " + longitude, null);
-        int colIndex = cursor.getColumnIndex("note");
-        int idIndex = cursor.getColumnIndex("id");
+        String sql = "SELECT * FROM myNotes WHERE latitude = " + latitude + " and longitude = " + longitude + ";";
+        Cursor cursor = db.rawQuery(sql,null);
+        String forText = "";
         if (cursor.moveToFirst()) {
-            text.setText(cursor.getString(colIndex));
-            currentID = cursor.getInt(idIndex);
+
+            int colIndex = cursor.getColumnIndex("note");
+            int idIndex = cursor.getColumnIndex("id");
+             forText = cursor.getString(colIndex);
+             currentID = cursor.getInt(idIndex);
         }
         cursor.close();
+
+        text.setText(forText);
     }
 
     public void onClickDelete(View view) {
@@ -64,6 +70,8 @@ public class LookNote extends AppCompatActivity {
     }
 
     public void onClickEdit(View view) {
-
+        Intent startEditIntent = new Intent(LookNote.this, EditNote.class);
+        startEditIntent.putExtra(EditNote.CURRENTID, Integer.toString(currentID));
+        startActivity(startEditIntent);
     }
 }

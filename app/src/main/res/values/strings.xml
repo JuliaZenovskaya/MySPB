@@ -7,4 +7,5 @@
     <string name="hint">Введите текст</string>
     <string name="btnForExit">Назад</string>
     <string name="btnForSave">Сохранить</string>
+    <string name="titleForEditNote">Изменение заметки</string>
 </resources>

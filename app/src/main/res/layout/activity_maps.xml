@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#ffffff">
+
+        <EditText
+            android:id="@+id/searchOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="1"
+            android:inputType="text"
+            android:hint="@string/hint" />
+
+        <ImageButton
+            android:id="@+id/btnSearchOnMap"
+            android:layout_width="50dp"
+            android:onClick="onClickSearch"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="#fff"
+            android:src="@android:drawable/ic_menu_search"
+            android:contentDescription="@string/desc" />
+
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/btnAddNewNotePartTwo"
+        android:onClick="onClickAddNewNotePartTwo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:src="@android:drawable/checkbox_on_background"
+        android:layout_gravity="end"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/desc" />
+
+    <ImageButton
+        android:id="@+id/btnAddNewNote"
+        android:onClick="onClickAddNewNote"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="end"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/desc" />
+
+
+
+    <ImageButton
+        android:onClick="onClickLocation"
+        android:id="@+id/btnMyLocation"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:layout_gravity="bottom|start"
+        android:contentDescription="@string/desc" />
+
+
+</FrameLayout>

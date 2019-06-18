@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_weight="1">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:onClick="onClickDelete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/desc"/>
+        <ImageButton
+            android:onClick="onClickEdit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="50dp"
+            android:src="@android:drawable/ic_menu_edit"
+            android:contentDescription="@string/desc"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#2d2d2d"
+        tools:ignore="NestedWeights"/>
+
+    <Button
+        android:onClick="onClickExit"
+        android:layout_margin="10dp"
+        android:id="@+id/buttonExitFromAddingNewNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="50dp"
+        android:gravity="center"
+        android:text="@string/btnForExit"
+        android:visibility="visible"
+        android:background="#2d2d2d"
+        android:textColor="#ffffff"
+        tools:ignore="ButtonStyle" />
+</LinearLayout>

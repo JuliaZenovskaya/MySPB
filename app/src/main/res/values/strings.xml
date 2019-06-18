@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MySPB</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="hintForSearching">Введите запрос</string>
+    <string name="desc">decs</string>
+    <string name="tittleForAddingNewNote">Новая заметка</string>
+    <string name="hint">Введите текст</string>
+    <string name="btnForExit">Назад</string>
+    <string name="btnForSave">Сохранить</string>
+</resources>

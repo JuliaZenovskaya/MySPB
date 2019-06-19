@@ -46,7 +46,7 @@
         android:onClick="onClickAddNewNotePartTwo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="#ffffff"
+        android:background="#fff"
         android:src="@android:drawable/checkbox_on_background"
         android:layout_gravity="end"
         android:layout_marginTop="50dp"

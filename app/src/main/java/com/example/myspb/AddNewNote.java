@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.myspb.Model.DBHelper;
+
 import java.util.Objects;
 
 public class AddNewNote extends AppCompatActivity {

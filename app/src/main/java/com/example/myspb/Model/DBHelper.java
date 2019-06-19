@@ -1,12 +1,11 @@
-package com.example.myspb;
+package com.example.myspb.Model;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    DBHelper(Context context) {
-        // конструктор суперкласса
+    public DBHelper(Context context) {
         super(context, "myDB", null, 1);
     }
 

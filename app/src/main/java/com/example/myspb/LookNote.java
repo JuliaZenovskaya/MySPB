@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.myspb.Model.DBHelper;
+
 import java.util.Objects;
 
 public class LookNote extends AppCompatActivity {

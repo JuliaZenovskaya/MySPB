@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.myspb.Model.DBHelper;
+
 import java.util.Objects;
 
 public class EditNote extends AppCompatActivity {

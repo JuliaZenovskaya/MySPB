@@ -28,8 +28,7 @@
         android:textColor="#4c4c4c"
         android:hint="@string/hint"
         android:layout_weight="1"
-        android:importantForAutofill="no"
-        tools:ignore="LabelFor" />
+        tools:ignore="Autofill,LabelFor" />
 
     <LinearLayout
         android:orientation="horizontal"

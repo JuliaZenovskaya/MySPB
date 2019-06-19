@@ -8,25 +8,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ImageButton btnAdd;
     private EditText searchText;
     private boolean added = true;
     LatLng latLng;
@@ -54,7 +49,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLngBounds SPB = new LatLngBounds(
                 new LatLng(59.77, 29.98), new LatLng(60.14, 30.54));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SPB.getCenter(), 10));
-        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -102,11 +96,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onClickAddNewNote(View view) {
         added = false;
-        btnAdd = view.findViewById(R.id.btnAddNewNote);
+        ImageButton btnAdd = view.findViewById(R.id.btnAddNewNote);
         btnAdd.setVisibility(View.INVISIBLE);
 
         LatLng latLng = new LatLng(60d, 30.3d);
-        markerForAdd = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true));
+        markerForAdd = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
     }
 

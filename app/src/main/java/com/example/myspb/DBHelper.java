@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         // конструктор суперкласса
         super(context, "myDB", null, 1);
     }

@@ -8,15 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.Objects;
 
 public class EditNote extends AppCompatActivity {
 
     private EditText text;
-    private Double latitude;
-    private Double longitude;
     private int currentID;
     DBHelper dbHelper;
 

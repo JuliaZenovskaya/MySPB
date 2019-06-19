@@ -1,10 +1,16 @@
 package com.example.myspb;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private static final int PERMISSION_REQUEST_CODE = 123;
     private EditText searchText;
     private boolean added = true;
     LatLng latLng;
@@ -31,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestPermission();
         setContentView(R.layout.activity_maps);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -99,13 +107,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageButton btnAdd = view.findViewById(R.id.btnAddNewNote);
         btnAdd.setVisibility(View.INVISIBLE);
 
-        LatLng latLng = new LatLng(60d, 30.3d);
-        markerForAdd = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        Location myLocation = mMap.getMyLocation();
+        LatLng latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        markerForAdd = mMap.addMarker(new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .draggable(true));
 
-    }
-
-    public void onClickLocation(View view) {
     }
 
     public void showPlaces(){
@@ -124,4 +131,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         cursor.close();
     }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        boolean allowed = false;
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            allowed = true;
+        }
+
+        if (allowed){
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+    }
 }
+
+

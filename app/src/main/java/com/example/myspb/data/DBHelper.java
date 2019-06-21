@@ -1,4 +1,4 @@
-package com.example.myspb.Model;
+package com.example.myspb.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

@@ -4,12 +4,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.myspb.Model.DBHelper;
+import com.example.myspb.data.DBHelper;
+import com.example.myspb.view.MapsActivity;
 
 import java.util.Objects;
 

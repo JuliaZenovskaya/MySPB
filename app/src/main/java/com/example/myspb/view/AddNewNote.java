@@ -1,14 +1,16 @@
-package com.example.myspb;
+package com.example.myspb.view;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.example.myspb.Model.DBHelper;
+import com.example.myspb.DiStorage;
+import com.example.myspb.R;
+import com.example.myspb.domain.model.Coordinates;
+import com.example.myspb.domain.model.Note;
+import com.example.myspb.domain.repository.GeoNotesRepository;
 
 import java.util.Objects;
 
@@ -17,7 +19,8 @@ public class AddNewNote extends AppCompatActivity {
     private Double lng;
     private Double lat;
     private EditText noteText;
-    DBHelper dbHelper;
+
+    private GeoNotesRepository geoNotesRepository;
 
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
@@ -34,20 +37,14 @@ public class AddNewNote extends AppCompatActivity {
 
         noteText = findViewById(R.id.newNote);
 
-        dbHelper = new DBHelper(this);
+        geoNotesRepository = DiStorage.getInstance().getGeoNotesRepository();
     }
 
     public void onClickSave(View view) {
-        ContentValues cv = new ContentValues();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Coordinates coordinates = new Coordinates(lat, lng);
+        Note note = new Note(coordinates, noteText.getText().toString());
 
-        cv.put("latitude", lat);
-        cv.put("longitude", lng);
-        cv.put("note", noteText.getText().toString());
-
-
-
-        db.insert("myNotes", null, cv);
+        geoNotesRepository.saveNote(note);
 
         Intent startMapIntent = new Intent(AddNewNote.this, MapsActivity.class);
         startActivity(startMapIntent);

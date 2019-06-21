@@ -1,21 +1,23 @@
-package com.example.myspb;
+package com.example.myspb.view;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.example.myspb.Model.DBHelper;
+import com.example.myspb.DiStorage;
+import com.example.myspb.R;
+import com.example.myspb.domain.model.Coordinates;
+import com.example.myspb.domain.model.Note;
+import com.example.myspb.domain.repository.GeoNotesRepository;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +28,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -33,8 +37,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText searchText;
     private boolean added = true;
     LatLng latLng;
-    DBHelper dbHelper;
     Marker markerForAdd;
+
+    private GeoNotesRepository geoNotesRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        dbHelper = new DBHelper(this);
+
+        geoNotesRepository = DiStorage.getInstance().getGeoNotesRepository();
 
         searchText = findViewById(R.id.searchOnMap);
     }
@@ -116,21 +122,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void showPlaces(){
+    public void showPlaces() {
         mMap.clear();
-        LatLng newlatlng;
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sql = "SELECT * FROM myNotes WHERE note LIKE '%" + searchText.getText().toString() + "%';";
-        Cursor cursor = db.rawQuery(sql,null);
-        if (cursor.moveToFirst()){
-            int latColIndex = cursor.getColumnIndex("latitude");
-            int lngColIndex = cursor.getColumnIndex("longitude");
-            do {
-                newlatlng = new LatLng(cursor.getDouble(latColIndex), cursor.getDouble(lngColIndex));
-                mMap.addMarker(new MarkerOptions().position(newlatlng));
-            } while (cursor.moveToNext());
+        List<? extends Note> notes = geoNotesRepository.findByName(searchText.getText().toString());
+        for (Note note : notes) {
+            Coordinates coordinates = note.getCoordinates();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(new LatLng(coordinates.getLat(), coordinates.getLon()));
+            mMap.addMarker(markerOptions);
         }
-        cursor.close();
     }
 
     private void requestPermission() {
@@ -147,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             allowed = true;
         }
 
-        if (allowed){
+        if (allowed) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {

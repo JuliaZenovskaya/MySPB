@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.myspb.DiStorage;
-import com.example.myspb.EditNote;
 import com.example.myspb.R;
 import com.example.myspb.domain.model.Coordinates;
 import com.example.myspb.domain.model.Note;

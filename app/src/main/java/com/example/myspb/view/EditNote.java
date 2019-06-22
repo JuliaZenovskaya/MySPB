@@ -1,4 +1,4 @@
-package com.example.myspb;
+package com.example.myspb.view;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -9,16 +9,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.myspb.DiStorage;
+import com.example.myspb.R;
 import com.example.myspb.data.DBHelper;
-import com.example.myspb.view.MapsActivity;
+import com.example.myspb.domain.model.Coordinates;
+import com.example.myspb.domain.model.Note;
+import com.example.myspb.domain.repository.GeoNotesRepository;
 
 import java.util.Objects;
 
 public class EditNote extends AppCompatActivity {
 
+    private Note currentNote;
+
+    private GeoNotesRepository geoNotesRepository;
     private EditText text;
     private int currentID;
-    DBHelper dbHelper;
 
     public static final String CURRENTID = "CURRENTID";
 
@@ -31,26 +37,16 @@ public class EditNote extends AppCompatActivity {
         currentID = Integer.parseInt(Objects.requireNonNull(bundle.getString(CURRENTID)));
 
         text = findViewById(R.id.editNote);
-
-        dbHelper = new DBHelper(this);
+        currentNote = findCurrentNote(bundle);
         showPreviousText();
     }
 
     public void showPreviousText(){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sql = "SELECT * FROM myNotes WHERE id = " + currentID + ";";
-        String forText = "";
-        Cursor cursor = db.rawQuery(sql,null);
-        if (cursor.moveToFirst()) {
-            int colIndex = cursor.getColumnIndex("note");
-            forText = cursor.getString(colIndex);
-        }
-        cursor.close();
-        text.setText(forText);
+        text.setText(currentNote.getText());
     }
 
     public void onClickSave(View view) {
-        updateNote();
+        geoNotesRepository.updateNote(currentID, text.getText().toString());
         Intent startMapIntent = new Intent(EditNote.this, MapsActivity.class);
         startActivity(startMapIntent);
     }
@@ -60,11 +56,10 @@ public class EditNote extends AppCompatActivity {
         startActivity(startMapIntent);
     }
 
-    public void updateNote(){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("note", text.getText().toString());
-        String[] forID = new String[] {Integer.toString(currentID)};
-        db.update("myNotes", cv, "id = ?", forID);
+    private Note findCurrentNote(Bundle bundle) {
+        int currentId = Integer.parseInt(Objects.requireNonNull(bundle.getString(CURRENTID)));
+        geoNotesRepository = DiStorage.getInstance().getGeoNotesRepository();
+
+        return geoNotesRepository.findOneById(currentId);
     }
 }

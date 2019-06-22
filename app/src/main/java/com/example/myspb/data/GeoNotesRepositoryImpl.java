@@ -45,6 +45,28 @@ public class GeoNotesRepositoryImpl implements GeoNotesRepository {
     }
 
     @Override
+    public Note findOneById(int id) {
+        String sql = "SELECT * FROM myNotes WHERE id = " + id + ";";
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try (Cursor cursor = db.rawQuery(sql, null)) {
+            if (cursor.moveToFirst()) {
+                int noteColIndex = cursor.getColumnIndex("note");
+                int latColIndex = cursor.getColumnIndex("latitude");
+                int lngColIndex = cursor.getColumnIndex("longitude");
+
+                Coordinates coordinates =
+                        new Coordinates(cursor.getDouble(latColIndex), cursor.getDouble(lngColIndex));
+
+                return new Note(id, coordinates, cursor.getString(noteColIndex));
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public void saveNote(Note note) {
         ContentValues cv = new ContentValues();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -60,6 +82,16 @@ public class GeoNotesRepositoryImpl implements GeoNotesRepository {
     public void deleteById(int noteId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete("myNotes", "id = " + noteId, null);
+    }
+
+    @Override
+    public void updateNote(int id, String text) {
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String[] forID = new String[] {Integer.toString(id)};
+
+        cv.put("note", text);
+        db.update("myNotes", cv, "id = ?", forID);
     }
 
     private List<? extends Note> getNotesByQuery(String sql) {

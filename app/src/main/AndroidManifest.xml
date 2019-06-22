@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".EditNote" />
+        <activity android:name=".view.EditNote" />
         <activity android:name=".view.LookNote" />
         <activity android:name=".view.AddNewNote" />
         <!--

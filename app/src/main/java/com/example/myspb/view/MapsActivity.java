@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.myspb.DiStorage;
 import com.example.myspb.R;
@@ -103,17 +104,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClickAddNewNotePartTwo(View view) {
         latLng = markerForAdd.getPosition();
         added = true;
-        Intent startAddIntent = new Intent(this, AddNewNote.class);
-        startAddIntent.putExtra(AddNewNote.LATITUDE, Double.toString(latLng.latitude));
-        startAddIntent.putExtra(AddNewNote.LONGITUDE, Double.toString(latLng.longitude));
-        startActivity(startAddIntent);
+        if (geoNotesRepository.findOneByCoordinates(new Coordinates(latLng.latitude, latLng.longitude)) != null) {
+            Intent startEditIntent = new Intent(this, EditNote.class);
+            startEditIntent.putExtra(EditNote.CURRENTID,
+                    Integer.toString(geoNotesRepository.findOneByCoordinates
+                            (new Coordinates(latLng.latitude, latLng.longitude)).getId()));
+            startActivity(startEditIntent);
+        } else {
+            Intent startAddIntent = new Intent(this, AddNewNote.class);
+            startAddIntent.putExtra(AddNewNote.LATITUDE, Double.toString(latLng.latitude));
+            startAddIntent.putExtra(AddNewNote.LONGITUDE, Double.toString(latLng.longitude));
+            startActivity(startAddIntent);
+        }
     }
 
     public void onClickAddNewNote(View view) {
         added = false;
         ImageButton btnAdd = view.findViewById(R.id.btnAddNewNote);
         btnAdd.setVisibility(View.INVISIBLE);
-
         Location myLocation = mMap.getMyLocation();
         LatLng latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         markerForAdd = mMap.addMarker(new MarkerOptions().position(latLng)

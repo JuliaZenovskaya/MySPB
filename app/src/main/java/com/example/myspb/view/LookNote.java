@@ -31,6 +31,7 @@ public class LookNote extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
 
+        geoNotesRepository = DiStorage.getInstance().getGeoNotesRepository();
         currentNote = findCurrentNote(bundle);
 
         ((TextView) findViewById(R.id.text))

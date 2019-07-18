@@ -36,6 +36,7 @@ public class EditNote extends AppCompatActivity {
         assert bundle != null;
         currentID = Integer.parseInt(Objects.requireNonNull(bundle.getString(CURRENTID)));
 
+        geoNotesRepository = DiStorage.getInstance().getGeoNotesRepository();
         text = findViewById(R.id.editNote);
         currentNote = findCurrentNote(bundle);
         showPreviousText();
